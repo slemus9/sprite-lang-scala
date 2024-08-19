@@ -1,7 +1,7 @@
 package sprite.language
 
 enum PrimitiveOperation(val name: String):
-  case Neg     extends PrimitiveOperation("!")
+  case Not     extends PrimitiveOperation("!")
   case And     extends PrimitiveOperation("&")
   case Or      extends PrimitiveOperation("|")
   case Add     extends PrimitiveOperation("+")
