@@ -44,9 +44,8 @@ object SpritePrinterTests extends FunSuite:
     "Let binding should be printed as a string starting with 'let', " +
       "followed by the binding and the body separated by ';'"
   ):
-    val binding    = Bind(name = "x", body = SpriteTerm.Integer(-534331))
     val letBinding = SpriteTerm.Let(
-      binding,
+      binding = Bind(name = "x", body = SpriteTerm.Integer(-534331)),
       body = SpriteTerm.LambdaApply(
         fun = SpriteTerm.Var("f"),
         arg = SpriteTerm.Var("x")

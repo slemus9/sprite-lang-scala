@@ -4,7 +4,7 @@ lazy val root = project
   .in(file("."))
   .aggregate(simplyTyped)
 
-// Chapter 1
+// Chapter 3
 lazy val simplyTyped = project
   .in(file("modules/simply-typed"))
   .settings(
