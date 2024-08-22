@@ -29,11 +29,5 @@ trait SpriteBaseParser:
       .fromStringMap(Map("true" -> true, "false" -> false))
       .tokenized
 
-  val intType: TokenParser[SpriteBaseType] =
+  val baseType: TokenParser[SpriteBaseType] =
     Parser.string("Int").as(SpriteBaseType.Int).tokenized
-
-  val boolType: TokenParser[SpriteBaseType] =
-    Parser.string("Bool").as(SpriteBaseType.Bool).tokenized
-
-  val baseType: Parser[SpriteBaseType] =
-    boolType | intType

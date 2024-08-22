@@ -5,15 +5,6 @@ import weaver.FunSuite
 
 object SpritePrinterTests extends FunSuite:
 
-  test("Bool constant should be printed as is"):
-    expect.same(
-      expected = "true",
-      found = SpritePrinter.printTerm(SpriteTerm.Bool(true))
-    ) and expect.same(
-      expected = "false",
-      found = SpritePrinter.printTerm(SpriteTerm.Bool(false))
-    )
-
   test("Int constant should be printed as is"):
     expect.same(
       expected = "1234451",

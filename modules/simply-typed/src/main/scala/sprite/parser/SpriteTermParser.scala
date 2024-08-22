@@ -16,8 +16,7 @@ object SpriteTermParser extends SpriteBaseParser:
     }
 
   lazy val baseSpriteTerm: Parser[SpriteTerm] =
-    bool.map(SpriteTerm.Bool.apply)
-      | positiveInt.map(SpriteTerm.Integer.apply)
+    positiveInt.map(SpriteTerm.Integer.apply)
       | variable
       | spriteTerm.between(reserved('('), reserved(')'))
 
@@ -35,7 +34,7 @@ object SpriteTermParser extends SpriteBaseParser:
 
   lazy val lambda: Parser[SpriteTerm.Lambda] =
     (
-      identifier.between(reserved('\\'), reserved("->")),
+      identifier.rep.between(reserved('\\'), reserved("->")),
       spriteTerm
     ).mapN(SpriteTerm.Lambda.apply)
 

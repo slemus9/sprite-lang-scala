@@ -16,17 +16,16 @@ object SpritePrinter:
 
   def printTerm(term: SpriteTerm): String = term match
     case SpriteTerm.Integer(value)      => value.toString
-    case SpriteTerm.Bool(value)         => value.toString
     case SpriteTerm.Var(name)           => name
     case SpriteTerm.Let(binding, body)  => s"let ${printBinding(binding)}; ${printTerm(body)}"
     case SpriteTerm.Lambda(param, body) => s"\\$param -> ${printTerm(body)}"
     case apply: SpriteTerm.LambdaApply  => printApply(apply)
 
   def printType(spriteType: SpriteType): String = spriteType match
-    case SpriteType.Base(base) => printBaseType(base)
+    case SpriteType.Base(_) => printBaseType
 
     case SpriteType.RefinedType(base, Refinement(varName, predicate)) =>
-      s"${printBaseType(base)}{$varName | ${printTerm(predicate)}}"
+      s"$printBaseType{$varName | ${printTerm(predicate)}}"
 
     case SpriteType.FunctionType(paramName, paramType: SpriteType.FunctionType, returnType) =>
       s"$paramName:(${printType(paramType)}) -> ${printType(returnType)}"
@@ -34,10 +33,8 @@ object SpritePrinter:
     case SpriteType.FunctionType(paramName, paramType, returnType) =>
       s"$paramName:${printType(paramType)} -> ${printType(returnType)}"
 
-  def printBaseType(baseType: SpriteBaseType): String =
-    baseType match
-      case SpriteBaseType.Bool                => "Bool"
-      case sprite.language.SpriteBaseType.Int => "Int"
+  lazy val printBaseType: String =
+    "Int"
 
   def printBinding(binding: Bind): String =
     s"${binding.name} = ${printTerm(binding.body)}"

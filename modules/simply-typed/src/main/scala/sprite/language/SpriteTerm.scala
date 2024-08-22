@@ -1,11 +1,12 @@
 package sprite.language
 
+import cats.data.NonEmptyList
+
 enum SpriteTerm:
   case Integer(value: Int)
-  case Bool(value: Boolean)
   case Var(name: String)
   case Let(binding: Bind, body: SpriteTerm)
-  case Lambda(param: String, body: SpriteTerm)
+  case Lambda(params: NonEmptyList[String], body: SpriteTerm)
   case LambdaApply(fun: SpriteTerm, arg: SpriteTerm)
 
   def isRecursive: Boolean =

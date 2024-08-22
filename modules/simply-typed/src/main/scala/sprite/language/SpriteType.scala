@@ -6,6 +6,6 @@ enum SpriteType:
   case FunctionType(param: String, paramType: SpriteType, returnType: SpriteType)
 
 enum SpriteBaseType:
-  case Bool, Int
+  case Int
 
 final case class Refinement(param: String, predicate: SpriteTerm)
