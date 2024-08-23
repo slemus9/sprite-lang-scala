@@ -11,6 +11,7 @@ lazy val simplyTyped = project
     libraryDependencies := Seq(
       "org.typelevel"       %% "cats-effect" % "3.5.4",
       "org.typelevel"       %% "cats-parse"  % "0.3.9",
+      "tools.aqua"           % "z3-turnkey"  % "4.13.0",
       "com.disneystreaming" %% "weaver-cats" % "0.8.4" % Test
     )
   )
