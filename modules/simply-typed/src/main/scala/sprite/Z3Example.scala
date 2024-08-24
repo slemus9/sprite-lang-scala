@@ -23,7 +23,6 @@ object Z3Example extends IOApp.Simple:
 
   def examplePredicate(context: Context): BoolExpr =
     given Context = context
-    val intSort   = context.mkIntSort
     val x         = context.mkIntConst("x")
     val y         = context.mkIntConst("y")
 
