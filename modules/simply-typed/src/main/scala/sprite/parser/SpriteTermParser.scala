@@ -3,7 +3,7 @@ package sprite.parser
 import cats.parse.Parser
 import cats.syntax.all.*
 import sprite.language.*
-import sprite.parser.TokenParser.*
+import sprite.parser.utils.TokenParser.*
 
 object SpriteTermParser extends SpriteBaseParser:
 

@@ -13,10 +13,24 @@ object Z3Example extends IOApp.Simple:
       params.add("logic", "QF_LIA")
       solver.setParameters(params)
 
-      val predicate = examplePredicate(context)
-      val result    = solver.check(predicate)
-
-      IO.println(s"Result: $result") >> IO.println(solver.getModel())
+      for
+        _        <- IO.delay(solver.push)
+        example1 <- IO.delay(examplePredicate(context))
+        _        <- IO.println(example1.getSExpr)
+        _        <- IO.delay(solver.add(example1))
+        isSat    <- IO.delay(solver.check)
+        _        <- IO.println(s"Is Satisfiable : $isSat")
+        _        <- IO.println(solver.getModel)
+        _        <- IO.println("----------------------")
+        _        <- IO.delay(solver.pop)
+        _        <- IO.delay(solver.push)
+        example2 <- IO.delay(context.mkNot(example1))
+        _        <- IO.println(example2.getSExpr)
+        _        <- IO.delay(solver.add(example2))
+        isSat    <- IO.delay(solver.check)
+        _        <- IO.println(s"Result: $isSat")
+        _        <- IO.delay(solver.pop)
+      yield ()
 
   def z3ContextResource: Resource[IO, Context] =
     Resource.fromAutoCloseable(IO.blocking(Context()))
@@ -36,3 +50,5 @@ object Z3Example extends IOApp.Simple:
 
   given z3Int(using context: Context): Conversion[Int, IntNum] with
     def apply(x: Int): IntNum = context.mkInt(x)
+
+end Z3Example

@@ -2,10 +2,34 @@ ThisBuild / scalaVersion := "3.3.3"
 
 lazy val root = project
   .in(file("."))
-  .aggregate(simplyTyped, solver)
+  .aggregate(
+    parser,
+    solver,
+    simplyTyped
+  )
+
+// --------------
+// Chapters
+// --------------
+
+// Chapter 3
+lazy val simplyTyped = project
+  .in(file("modules/simply-typed"))
+  .dependsOn(parser, solver)
+  .settings(
+    libraryDependencies := Seq(
+      "org.typelevel"       %% "cats-effect" % "3.5.4",
+      "com.disneystreaming" %% "weaver-cats" % "0.8.4" % Test
+    )
+  )
+
+// --------------
+// Common modules
+// --------------
 
 lazy val solver = project
   .in(file("modules/solver"))
+  .dependsOn(parser)
   .settings(
     libraryDependencies := Seq(
       "org.typelevel" %% "cats-effect" % "3.5.4",
@@ -13,14 +37,10 @@ lazy val solver = project
     )
   )
 
-// Chapter 3
-lazy val simplyTyped = project
-  .in(file("modules/simply-typed"))
-  .dependsOn(solver)
+lazy val parser = project
+  .in(file("modules/parser"))
   .settings(
     libraryDependencies := Seq(
-      "org.typelevel"       %% "cats-effect" % "3.5.4",
-      "org.typelevel"       %% "cats-parse"  % "0.3.9",
-      "com.disneystreaming" %% "weaver-cats" % "0.8.4" % Test
+      "org.typelevel" %% "cats-parse" % "0.3.9"
     )
   )

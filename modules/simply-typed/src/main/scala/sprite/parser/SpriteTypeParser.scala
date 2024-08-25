@@ -3,7 +3,8 @@ package sprite.parser
 import cats.parse.Parser
 import cats.syntax.all.*
 import sprite.language.*
-import sprite.parser.TokenParser.reserved
+import sprite.parser.utils.TokenParser.reserved
+import sprite.solver.qflia.parser.BoolTermParser
 
 object SpriteTypeParser extends SpriteBaseParser:
 
@@ -27,5 +28,5 @@ object SpriteTypeParser extends SpriteBaseParser:
   lazy val refinement: Parser[Refinement] =
     (
       identifier <* reserved('|'),
-      SpriteTermParser.spriteTerm
+      BoolTermParser.boolTerm
     ).mapN(Refinement.apply).between(reserved('{'), reserved('}'))

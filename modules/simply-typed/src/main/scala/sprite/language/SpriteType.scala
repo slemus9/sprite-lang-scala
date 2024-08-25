@@ -1,5 +1,7 @@
 package sprite.language
 
+import sprite.solver.qflia.language.BoolTerm
+
 enum SpriteType:
   case Base(base: SpriteBaseType)
   case RefinedType(base: SpriteBaseType, refinement: Refinement)
@@ -8,4 +10,4 @@ enum SpriteType:
 enum SpriteBaseType:
   case Int
 
-final case class Refinement(param: String, predicate: SpriteTerm)
+final case class Refinement(param: String, predicate: BoolTerm)

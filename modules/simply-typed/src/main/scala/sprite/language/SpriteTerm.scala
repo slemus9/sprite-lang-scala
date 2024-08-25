@@ -11,7 +11,7 @@ enum SpriteTerm:
 
   def isRecursive: Boolean =
     this match
-      case _: (Let | Lambda | LambdaApply) => true
-      case _                               => false
+      case _: (Integer | Var) => false
+      case _                  => true
 
 final case class Bind(name: String, body: SpriteTerm)

@@ -4,7 +4,7 @@ import cats.data.NonEmptyList
 import cats.parse.Parser
 import cats.syntax.all.*
 import sprite.language.SpriteDeclaration
-import sprite.parser.TokenParser.{reserved, whitespace}
+import sprite.parser.utils.TokenParser.{reserved, whitespace}
 
 object SpriteParser extends SpriteBaseParser:
 

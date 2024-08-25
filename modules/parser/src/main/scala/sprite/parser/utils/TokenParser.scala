@@ -1,4 +1,4 @@
-package sprite.parser
+package sprite.parser.utils
 
 import cats.parse.{Parser, Parser0}
 

@@ -6,8 +6,8 @@ import cats.syntax.all.*
 object Example extends IOApp.Simple:
 
   val program1 = """
-    f : x:Int -> y:(h:Int -> Int) -> z:Int{v | less v (+ x 10)} -> Int;
-    f x y z = less z (+ x 20);
+    f : x:Int -> y:(h:Int -> Int) -> z:Int{v | <==> (> v (+ x 10)) (== (h x) (+ z 1))} -> Int;
+    f x y z = > z (+ x 20);
 
     x : h:(a:Int -> Int) -> Int;
     x =
@@ -17,9 +17,9 @@ object Example extends IOApp.Simple:
       + h y;
   """
 
-  val program2 = "f : h:(a:Int -> Int) -> g:(b:Int -> Int) -> Int"
+  val program2 = "f : x:Int -> y:(h:Int -> Int) -> z:Int{v | > v (+ x 10)} -> Int;"
 
   override def run: IO[Unit] =
     IO.println(
-      parser.SpriteParser.spriteDeclarations.parseAll(program1).right.get.toList
+      parser.SpriteParser.spriteDeclarations.parseAll(program1)
     )

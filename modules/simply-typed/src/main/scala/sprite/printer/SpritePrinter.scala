@@ -1,6 +1,7 @@
 package sprite.printer
 
 import sprite.language.*
+import sprite.solver.qflia.printer.BoolTermPrinter
 
 object SpritePrinter:
 
@@ -25,7 +26,7 @@ object SpritePrinter:
     case SpriteType.Base(_) => printBaseType
 
     case SpriteType.RefinedType(base, Refinement(varName, predicate)) =>
-      s"$printBaseType{$varName | ${printTerm(predicate)}}"
+      s"$printBaseType{$varName | ${BoolTermPrinter.printTerm(predicate)}}"
 
     case SpriteType.FunctionType(paramName, paramType: SpriteType.FunctionType, returnType) =>
       s"$paramName:(${printType(paramType)}) -> ${printType(returnType)}"

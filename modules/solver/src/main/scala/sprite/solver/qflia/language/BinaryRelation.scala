@@ -1,18 +1,13 @@
 package sprite.solver.qflia.language
 
-import com.microsoft.z3.*
+enum BinaryRelation(val name: String):
+  case Equal       extends BinaryRelation("==")
+  case GreaterOrEq extends BinaryRelation(">=")
+  case LessOrEq    extends BinaryRelation("<=")
+  case Greater     extends BinaryRelation(">")
+  case Less        extends BinaryRelation("<")
 
-enum BinaryRelation:
-  case Equal,
-    GreaterOrEq,
-    LessOrEq,
-    Greater,
-    Less
+object BinaryRelation:
 
-  def toZ3(using context: Context): (Expr[IntSort], Expr[IntSort]) => BoolExpr =
-    this match
-      case Equal       => context.mkEq
-      case GreaterOrEq => context.mkGe
-      case LessOrEq    => context.mkLe
-      case Greater     => context.mkGt
-      case Less        => context.mkLt
+  def byName: Map[String, BinaryRelation] =
+    BinaryRelation.values.map(rel => rel.name -> rel).toMap
