@@ -1,5 +1,6 @@
 package sprite.solver.qflia.language
 
 enum Declaration:
-  case Const[S <: Sort](name: String, sort: S)
-  case Function[Domain <: Sort, Range <: Sort](name: String, domain: Domain, range: Range)
+  case Const(name: String, sort: Sort)
+  case Function(name: String, domain: Sort, range: Sort)
+  case Assertion(bool: BoolTerm)
