@@ -2,7 +2,6 @@ package sprite.solver.qflia
 
 import cats.effect.Sync
 import com.microsoft.z3
-import sprite.solver.qflia.language.{Declaration, Sort}
 
 final class QF_LIA_Solver[F[_]] private (
     private val context: z3.Context,
@@ -14,13 +13,6 @@ final class QF_LIA_Solver[F[_]] private (
 
   private val pop: F[Unit] =
     F.delay(z3Solver.pop)
-
-  def declareConst(const: Declaration.Const): F[Unit] =
-    ???
-
-  def z3Sort(sort: Sort): z3.Sort = sort match
-    case Sort.Bool => context.getBoolSort
-    case Sort.Int  => context.getIntSort
 
 object QF_LIA_Solver:
 

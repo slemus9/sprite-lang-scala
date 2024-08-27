@@ -20,7 +20,7 @@ object Z3Example extends IOApp.Simple:
 
   def exampleSolving2(context: Context, solver: Solver): IO[Unit] =
     given Context = context
-    val x         = context.mkIntConst("x")
+    val x         = context.mkConstDecl("x", context.getIntSort)()
     val xPred     = context.mkLe(0, x)
     val y         = context.mkIntConst("y")
     val yPred     = context.mkEq(y, context.mkAdd(x, 1))
