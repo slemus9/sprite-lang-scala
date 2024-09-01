@@ -13,5 +13,7 @@ enum PrimitiveOperation(val name: String):
 
 object PrimitiveOperation:
 
+  type IntOperation = And.type | Sub.type
+
   val byName: Map[String, PrimitiveOperation] =
     PrimitiveOperation.values.map(op => op.name -> op).toMap

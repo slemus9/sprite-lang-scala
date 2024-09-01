@@ -8,11 +8,19 @@ import sprite.parser.utils.TokenParser.*
 object SpriteTermParser extends SpriteBaseParser:
 
   lazy val spriteTerm: Parser[SpriteTerm] =
-    Parser.defer {
-      lambda
-        | let
-        | lambdaApply
-        | baseSpriteTerm
+    withAnnotation(
+      Parser.defer {
+        lambda
+          | let
+          | lambdaApply
+          | baseSpriteTerm
+      }
+    )
+
+  def withAnnotation(term: Parser[SpriteTerm]): Parser[SpriteTerm] =
+    (term ~ (reserved(':').with1 *> SpriteTypeParser.spriteType).?).map {
+      case (term, None)            => term
+      case (term, Some(annotated)) => SpriteTerm.Annotation(term, annotated)
     }
 
   lazy val baseSpriteTerm: Parser[SpriteTerm] =
@@ -42,3 +50,4 @@ object SpriteTermParser extends SpriteBaseParser:
     baseSpriteTerm.rep.map { terms =>
       terms.reduceLeft(SpriteTerm.LambdaApply.apply)
     }
+end SpriteTermParser

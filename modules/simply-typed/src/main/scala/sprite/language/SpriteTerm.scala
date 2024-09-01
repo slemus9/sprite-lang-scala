@@ -8,6 +8,7 @@ enum SpriteTerm:
   case Let(binding: Bind, body: SpriteTerm)
   case Lambda(params: NonEmptyList[String], body: SpriteTerm)
   case LambdaApply(fun: SpriteTerm, arg: SpriteTerm)
+  case Annotation(term: SpriteTerm, annotated: SpriteType)
 
   def isRecursive: Boolean =
     this match

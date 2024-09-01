@@ -9,18 +9,19 @@ object SpritePrinter:
     declaration.view.map(printDeclaration).mkString(";\n")
 
   def printDeclaration(declaration: SpriteDeclaration): String = declaration match
-    case SpriteDeclaration.SuperCombinator(name, params, term) =>
-      s"${(name :: params).mkString(" ")} = ${printTerm(term)}"
+    case SpriteDeclaration.TermDeclaration(name, term) =>
+      s"$name = ${printTerm(term)}"
 
-    case SpriteDeclaration.SuperCombinatorType(name, spriteType) =>
+    case SpriteDeclaration.TypeDeclaration(name, spriteType) =>
       s"$name : ${printType(spriteType)}"
 
   def printTerm(term: SpriteTerm): String = term match
-    case SpriteTerm.Integer(value)      => value.toString
-    case SpriteTerm.Var(name)           => name
-    case SpriteTerm.Let(binding, body)  => s"let ${printBinding(binding)}; ${printTerm(body)}"
-    case SpriteTerm.Lambda(param, body) => s"\\$param -> ${printTerm(body)}"
-    case apply: SpriteTerm.LambdaApply  => printApply(apply)
+    case SpriteTerm.Integer(value)              => value.toString
+    case SpriteTerm.Var(name)                   => name
+    case SpriteTerm.Let(binding, body)          => s"let ${printBinding(binding)}; ${printTerm(body)}"
+    case SpriteTerm.Lambda(param, body)         => s"\\$param -> ${printTerm(body)}"
+    case SpriteTerm.Annotation(term, annotated) => s"${printWithParensIfRec(term)} : $annotated"
+    case apply: SpriteTerm.LambdaApply          => printApply(apply)
 
   def printType(spriteType: SpriteType): String = spriteType match
     case SpriteType.Base(_) => printBaseType
@@ -40,16 +41,14 @@ object SpritePrinter:
   def printBinding(binding: Bind): String =
     s"${binding.name} = ${printTerm(binding.body)}"
 
-  def printApply(apply: SpriteTerm.LambdaApply): String =
+  def printApply(apply: SpriteTerm.LambdaApply): String = apply match
+    case SpriteTerm.LambdaApply(apply: SpriteTerm.LambdaApply, arg) =>
+      s"${printApply(apply)} ${printWithParensIfRec(arg)}"
 
-    def printWithParensIfRec(term: SpriteTerm) =
-      if term.isRecursive then s"(${printTerm(term)})" else printTerm(term)
+    case SpriteTerm.LambdaApply(fun, arg) =>
+      s"${printWithParensIfRec(fun)} ${printWithParensIfRec(arg)}"
 
-    apply match
-      case SpriteTerm.LambdaApply(apply: SpriteTerm.LambdaApply, arg) =>
-        s"${printApply(apply)} ${printWithParensIfRec(arg)}"
-
-      case SpriteTerm.LambdaApply(fun, arg) =>
-        s"${printWithParensIfRec(fun)} ${printWithParensIfRec(arg)}"
+  def printWithParensIfRec(term: SpriteTerm) =
+    if term.isRecursive then s"(${printTerm(term)})" else printTerm(term)
 
 end SpritePrinter

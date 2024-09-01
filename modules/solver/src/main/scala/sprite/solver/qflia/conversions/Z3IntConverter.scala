@@ -8,7 +8,6 @@ import sprite.solver.qflia.language.IntPrimitive.*
 import sprite.solver.qflia.language.IntTerm.*
 
 given Z3IntConverter(using context: Z3Context): Z3ExprConverter[IntTerm, IntSort] with
-
   override def toZ3(term: IntTerm): Result[Expr[IntSort]] = term match
     case Const(value)         => context.call(_.mkInt(value))
     case Var(name)            => context.lookup(name).map(_.apply())

@@ -8,7 +8,6 @@ import sprite.solver.qflia.language.BoolTerm
 import sprite.solver.qflia.language.BoolTerm.*
 
 given Z3BoolConverter(using context: Z3Context): Z3ExprConverter[BoolTerm, BoolSort] with
-
   override def toZ3(term: BoolTerm): Result[Expr[BoolSort]] = term match
     case True                      => context.call(_.mkTrue)
     case False                     => context.call(_.mkFalse)

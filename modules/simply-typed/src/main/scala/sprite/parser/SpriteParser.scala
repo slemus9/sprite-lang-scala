@@ -4,6 +4,7 @@ import cats.data.NonEmptyList
 import cats.parse.Parser
 import cats.syntax.all.*
 import sprite.language.SpriteDeclaration
+import sprite.language.SpriteTerm
 import sprite.parser.utils.TokenParser.{reserved, whitespace}
 
 object SpriteParser extends SpriteBaseParser:
@@ -12,17 +13,14 @@ object SpriteParser extends SpriteBaseParser:
     spriteDeclaration.repSep(reserved(';')).between(whitespace, reserved(';').?)
 
   lazy val spriteDeclaration: Parser[SpriteDeclaration] =
-    superCombinatorType.backtrack | superCombinator
+    typeDeclaration.backtrack | termDeclaration
 
-  lazy val superCombinatorType: Parser[SpriteDeclaration.SuperCombinatorType] =
+  lazy val typeDeclaration: Parser[SpriteDeclaration.TypeDeclaration] =
     (identifier <* reserved(':'), SpriteTypeParser.spriteType).mapN(
-      SpriteDeclaration.SuperCombinatorType.apply
+      SpriteDeclaration.TypeDeclaration.apply
     )
 
-  lazy val superCombinator: Parser[SpriteDeclaration.SuperCombinator] =
-    (
-      identifier.rep <* reserved('='),
-      SpriteTermParser.spriteTerm
-    ).mapN { case (NonEmptyList(name, args), term) =>
-      SpriteDeclaration.SuperCombinator(name, args, term)
-    }
+  lazy val termDeclaration: Parser[SpriteDeclaration.TermDeclaration] =
+    (identifier <* reserved('='), SpriteTermParser.spriteTerm).mapN(
+      SpriteDeclaration.TermDeclaration.apply
+    )

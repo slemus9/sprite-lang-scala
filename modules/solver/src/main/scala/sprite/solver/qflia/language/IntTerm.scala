@@ -14,6 +14,17 @@ enum IntTerm:
       case _: (Const | Var) => false
       case _                => true
 
+  def substitute(variable: String, term: IntTerm): IntTerm = this match
+    case c: Const                      => c
+    case Var(name) if name == variable => term
+    case v: Var                        => v
+    case ConstantMul(c, x)             => ConstantMul(c, x.substitute(variable, term))
+    case ApplyFunction(fun, arg)       =>
+      ApplyFunction(
+        fun.substitute(variable, term),
+        arg.substitute(variable, term)
+      )
+
 final case class ApplyFlattened(fun: IntTerm, args: NonEmptyList[IntTerm])
 
 object ApplyFlattened:

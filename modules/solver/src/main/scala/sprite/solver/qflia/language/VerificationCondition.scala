@@ -12,3 +12,8 @@ object VerificationCondition:
   enum Declaration:
     case Const(name: String)
     case Function(name: String, arity: Int)
+
+  val holds = VerificationCondition(
+    declarations = List.empty,
+    assertions = List(BoolTerm.True)
+  )

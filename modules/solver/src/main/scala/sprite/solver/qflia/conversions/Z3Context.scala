@@ -32,14 +32,15 @@ final case class Z3Context(
 object Z3Context:
 
   def build(declarations: List[Declaration])(using context: Context): Either[Z3Error, Z3Context] =
+    val intSort = context.getIntSort
     declarations
       .traverse {
         case Declaration.Const(name) =>
-          wrapZ3(context.mkConstDecl(name, context.getIntSort)).map(name -> _)
+          wrapZ3(context.mkConstDecl(name, intSort)).map(name -> _)
 
         case Declaration.Function(name, arity) =>
-          val domain = Array.fill[Sort](arity)(context.getIntSort)
-          wrapZ3(context.mkFuncDecl(name, domain, context.getIntSort)).map(name -> _)
+          val domain = Array.fill[Sort](arity)(intSort)
+          wrapZ3(context.mkFuncDecl(name, domain, intSort)).map(name -> _)
       }
       .map { entries =>
         Z3Context(environment = entries.toMap, z3 = context)
