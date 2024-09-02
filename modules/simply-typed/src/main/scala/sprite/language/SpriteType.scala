@@ -7,20 +7,6 @@ enum SpriteType:
   case RefinedType(base: SpriteBaseType, refinement: Refinement)
   case FunctionType(param: String, paramType: SpriteType, returnType: SpriteType)
 
-  def substitute(variable: String, term: IntTerm): SpriteType = this match
-    case b: Base => b
-
-    case r @ RefinedType(_, Refinement(v, p)) if v == variable => r
-
-    case RefinedType(b, Refinement(v, p)) =>
-      RefinedType(b, Refinement(v, p.substitute(variable, term)))
-
-    case FunctionType(x, s, t) if x == variable =>
-      FunctionType(x, s.substitute(variable, term), t)
-
-    case FunctionType(x, s, t) =>
-      FunctionType(x, s.substitute(variable, term), t.substitute(variable, term))
-
 enum SpriteBaseType:
   case Int
 

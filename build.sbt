@@ -3,6 +3,7 @@ ThisBuild / scalaVersion := "3.3.3"
 lazy val root = project
   .in(file("."))
   .aggregate(
+    languages,
     parser,
     solver,
     simplyTyped
@@ -15,7 +16,7 @@ lazy val root = project
 // Chapter 3
 lazy val simplyTyped = project
   .in(file("modules/simply-typed"))
-  .dependsOn(parser, solver)
+  .dependsOn(languages, parser, solver)
   .settings(
     libraryDependencies := Seq(
       "org.typelevel"       %% "cats-effect" % "3.5.4",
@@ -29,7 +30,7 @@ lazy val simplyTyped = project
 
 lazy val solver = project
   .in(file("modules/solver"))
-  .dependsOn(parser)
+  .dependsOn(languages, parser)
   .settings(
     libraryDependencies := Seq(
       "org.typelevel" %% "cats-effect" % "3.5.4",
@@ -44,3 +45,6 @@ lazy val parser = project
       "org.typelevel" %% "cats-parse" % "0.3.9"
     )
   )
+
+lazy val languages = project
+  .in(file("modules/languages"))

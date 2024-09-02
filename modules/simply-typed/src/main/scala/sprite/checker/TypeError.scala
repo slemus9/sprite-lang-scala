@@ -8,7 +8,7 @@ type TypeCheckResult[A] = Either[TypeError, A]
 
 sealed trait TypeError extends Throwable, NoStackTrace
 
-final class TypeNotFound(variable: String) extends TypeError:
+final class UndeclaredVariable(variable: String) extends TypeError:
   override val getMessage: String =
     s"Variable was not declared: $variable"
 

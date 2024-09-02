@@ -5,7 +5,12 @@ import sprite.checker.TypeSynthetizer.*
 import sprite.language.{SpriteTerm, SpriteType}
 import sprite.language.SpriteTerm.*
 import sprite.language.SpriteType.FunctionType
-import sprite.solver.qflia.language.Constraint
+import sprite.languages.Substitution.substitute
+import sprite.languages.Transformation.to
+import sprite.solver.qflia.language.{Constraint, IntTerm}
+import sprite.solver.qflia.parser.IntTermParser.variable
+import sprite.substitutions.SpriteTypeSubstitution
+import sprite.transformations.SpriteTerminalTermQFLIATransformer
 
 trait TypeSynthetizer:
   checker: TypeChecker =>
@@ -15,7 +20,7 @@ trait TypeSynthetizer:
       Synth(constraint = Constraint.alwaysHolds, inferred = SpriteType.primitive(x)).pure
 
     case Var(name) =>
-      context.get(name).toRight(TypeNotFound(name)).map { t =>
+      context.get(name).toRight(UndeclaredVariable(name)).map { t =>
         Synth(constraint = Constraint.alwaysHolds, inferred = t)
       }
 
@@ -26,13 +31,8 @@ trait TypeSynthetizer:
 
     case LambdaApply(fun: Inferable, arg) =>
       synth(context, fun).flatMap {
-        case Synth(c1, FunctionType(param, paramType, returnType)) =>
-          checker.check(context, arg, expectedType = paramType).map { c2 =>
-            Synth(
-              constraint = c1 and c2,
-              inferred = returnType // TODO: substitution
-            )
-          }
+        case Synth(funConstraint, funType: FunctionType) =>
+          synthLambdaApply(context, funConstraint, funType, argument = arg)
 
         case other =>
           InvalidApply(other.inferred).raiseError
@@ -40,6 +40,23 @@ trait TypeSynthetizer:
 
     case LambdaApply(fun, _) =>
       NonInferable(fun).raiseError
+
+  private def synthLambdaApply(
+      context: Map[String, SpriteType],
+      funConstraint: Constraint,
+      funType: FunctionType,
+      argument: SpriteTerm.TerminalTerm
+  ): TypeCheckResult[Synth] =
+    checker.check(context, argument, expectedType = funType.paramType).map { argConstraint =>
+      val inferred = funType.returnType.substitute(
+        variable = funType.param,
+        body = argument.to[IntTerm]
+      )
+
+      Synth(constraint = funConstraint and argConstraint, inferred)
+    }
+
+end TypeSynthetizer
 
 object TypeSynthetizer:
 
