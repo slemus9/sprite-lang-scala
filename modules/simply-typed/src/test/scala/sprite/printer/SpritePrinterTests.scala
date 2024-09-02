@@ -8,13 +8,13 @@ object SpritePrinterTests extends FunSuite:
   test("Int constant should be printed as is"):
     expect.same(
       expected = "1234451",
-      found = SpritePrinter.printTerm(SpriteTerm.Integer(1234451))
+      found = SpritePrinter.printTerm(SpriteTerm.IntConst(1234451))
     ) and expect.same(
       expected = "0",
-      found = SpritePrinter.printTerm(SpriteTerm.Integer(0))
+      found = SpritePrinter.printTerm(SpriteTerm.IntConst(0))
     ) and expect.same(
       expected = "-534331",
-      found = SpritePrinter.printTerm(SpriteTerm.Integer(-534331))
+      found = SpritePrinter.printTerm(SpriteTerm.IntConst(-534331))
     )
 
   test("Variable name should be printed as is"):
@@ -24,7 +24,7 @@ object SpritePrinterTests extends FunSuite:
     )
 
   test("Binding should be printed as a string with the binding name and the term separated by '='"):
-    val binding = Bind(name = "mybinding", body = SpriteTerm.Integer(-534331))
+    val binding = Bind(name = "mybinding", body = SpriteTerm.IntConst(-534331))
 
     expect.same(
       expected = "mybinding = -534331",
@@ -36,7 +36,7 @@ object SpritePrinterTests extends FunSuite:
       "followed by the binding and the body separated by ';'"
   ):
     val letBinding = SpriteTerm.Let(
-      binding = Bind(name = "x", body = SpriteTerm.Integer(-534331)),
+      binding = Bind(name = "x", body = SpriteTerm.IntConst(-534331)),
       body = SpriteTerm.LambdaApply(
         fun = SpriteTerm.Var("f"),
         arg = SpriteTerm.Var("x")

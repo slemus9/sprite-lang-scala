@@ -16,7 +16,7 @@ object SpritePrinter:
       s"$name : ${printType(spriteType)}"
 
   def printTerm(term: SpriteTerm): String = term match
-    case SpriteTerm.Integer(value)              => value.toString
+    case SpriteTerm.IntConst(value)             => value.toString
     case SpriteTerm.Var(name)                   => name
     case SpriteTerm.Let(binding, body)          => s"let ${printBinding(binding)}; ${printTerm(body)}"
     case SpriteTerm.Lambda(param, body)         => s"\\$param -> ${printTerm(body)}"

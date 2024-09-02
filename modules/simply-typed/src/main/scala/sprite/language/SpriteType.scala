@@ -30,7 +30,7 @@ object SpriteType:
 
   /** Builds the type: Int{v | v == constant}
     */
-  def primitive(constant: SpriteTerm.Integer): RefinedType =
+  def primitive(constant: SpriteTerm.IntConst): RefinedType =
     RefinedType(
       base = SpriteBaseType.Int,
       refinement = selfRefinedEquality(IntTerm.Const(constant.value))

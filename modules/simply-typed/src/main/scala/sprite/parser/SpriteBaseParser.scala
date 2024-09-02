@@ -12,10 +12,10 @@ trait SpriteBaseParser extends BaseTokenParser:
   val primitiveOperation: TokenParser[PrimitiveOperation] =
     Parser.fromStringMap(PrimitiveOperation.byName).tokenized
 
-  val variable: TokenParser[SpriteTerm] =
+  val variable: TokenParser[SpriteTerm.Var] =
     identifier
       .orElse(primitiveOperation.map(_.name))
-      .map(SpriteTerm.Var.apply)
+      .map[SpriteTerm.Var](SpriteTerm.Var.apply)
       .tokenized
 
   val baseType: TokenParser[SpriteBaseType] =

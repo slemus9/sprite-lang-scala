@@ -11,7 +11,7 @@ trait TypeSynthetizer:
   checker: TypeChecker =>
 
   def synth(context: Map[String, SpriteType], term: Inferable): TypeCheckResult[Synth] = term match
-    case x: Integer =>
+    case x: IntConst =>
       Synth(constraint = Constraint.alwaysHolds, inferred = SpriteType.primitive(x)).pure
 
     case Var(name) =>
@@ -43,7 +43,7 @@ trait TypeSynthetizer:
 
 object TypeSynthetizer:
 
-  type Inferable = Integer | Var | LambdaApply | Annotation
+  type Inferable = IntConst | Var | LambdaApply | Annotation
 
   final case class Synth(
       constraint: Constraint,

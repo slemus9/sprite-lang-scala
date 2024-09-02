@@ -3,6 +3,7 @@ package sprite.parser
 import cats.parse.Parser
 import cats.syntax.all.*
 import sprite.language.*
+import sprite.language.SpriteTerm.*
 import sprite.parser.utils.TokenParser.*
 
 object SpriteTermParser extends SpriteBaseParser:
@@ -23,8 +24,11 @@ object SpriteTermParser extends SpriteBaseParser:
       case (term, Some(annotated)) => SpriteTerm.Annotation(term, annotated)
     }
 
+  lazy val terminalTerm: Parser[TerminalTerm] =
+    positiveInt.map[IntConst](IntConst.apply) | variable
+
   lazy val baseSpriteTerm: Parser[SpriteTerm] =
-    positiveInt.map(SpriteTerm.Integer.apply)
+    positiveInt.map(IntConst.apply)
       | variable
       | spriteTerm.between(reserved('('), reserved(')'))
 
@@ -34,20 +38,22 @@ object SpriteTermParser extends SpriteBaseParser:
       spriteTerm
     ).mapN(Bind.apply)
 
-  lazy val let: Parser[SpriteTerm.Let] =
+  lazy val let: Parser[Let] =
     (
       binding.between(reserved("let"), reserved(';')),
       spriteTerm
-    ).mapN(SpriteTerm.Let.apply)
+    ).mapN(Let.apply)
 
-  lazy val lambda: Parser[SpriteTerm.Lambda] =
+  lazy val lambda: Parser[Lambda] =
     (
       identifier.rep.between(reserved('\\'), reserved("->")),
       spriteTerm
-    ).mapN(SpriteTerm.Lambda.apply)
+    ).mapN(Lambda.apply)
 
   lazy val lambdaApply: Parser[SpriteTerm] =
-    baseSpriteTerm.rep.map { terms =>
-      terms.reduceLeft(SpriteTerm.LambdaApply.apply)
+    (baseSpriteTerm ~ terminalTerm.rep0).map {
+      case (term, Nil) => term
+      case (fun, args) => args.foldLeft(fun)(LambdaApply.apply)
     }
+
 end SpriteTermParser
