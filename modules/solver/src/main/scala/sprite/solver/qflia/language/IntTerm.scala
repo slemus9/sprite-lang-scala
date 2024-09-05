@@ -1,7 +1,6 @@
 package sprite.solver.qflia.language
 
 import cats.data.NonEmptyList
-import sprite.solver.qflia.ApplyFunctionError
 
 enum IntTerm:
   case Const(value: Int)

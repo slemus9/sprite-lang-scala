@@ -48,3 +48,8 @@ lazy val parser = project
 
 lazy val languages = project
   .in(file("modules/languages"))
+  .settings(
+    libraryDependencies := Seq(
+      "org.typelevel" %% "cats-core" % "2.12.0"
+    )
+  )

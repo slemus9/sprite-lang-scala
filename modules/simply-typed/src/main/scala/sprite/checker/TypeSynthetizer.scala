@@ -6,7 +6,6 @@ import sprite.language.{SpriteTerm, SpriteType}
 import sprite.language.SpriteTerm.*
 import sprite.language.SpriteType.FunctionType
 import sprite.languages.Substitution.substitute
-import sprite.languages.Transformation.to
 import sprite.solver.qflia.language.{Constraint, IntTerm}
 import sprite.solver.qflia.parser.IntTermParser.variable
 import sprite.substitutions.SpriteTypeSubstitution
@@ -50,7 +49,7 @@ trait TypeSynthetizer:
     checker.check(context, argument, expectedType = funType.paramType).map { argConstraint =>
       val inferred = funType.returnType.substitute(
         variable = funType.param,
-        body = argument.to[IntTerm]
+        body = argument.transform.into[IntTerm]
       )
 
       Synth(constraint = funConstraint and argConstraint, inferred)

@@ -6,7 +6,7 @@ enum Constraint:
 
   case And(c1: Constraint, c2: Constraint)
 
-  /** Encodes the constraint: forall param: Int . antecedent => consequent. For now the sort of
+  /** Encodes the constraint: forall param: Int . antecedent ==> consequent. For now the sort of
     * param is Int, this will be generalized later
     */
   case ForallImplication(param: String, antecedent: BoolTerm, consequent: Constraint)
