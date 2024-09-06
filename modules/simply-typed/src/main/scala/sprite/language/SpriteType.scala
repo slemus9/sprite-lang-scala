@@ -1,5 +1,6 @@
 package sprite.language
 
+import cats.data.NonEmptyVector
 import sprite.solver.qflia.language.*
 
 enum SpriteType:
@@ -59,3 +60,27 @@ object SpriteType:
     )
 
 end SpriteType
+
+final case class FlattenedFunctionType(
+    params: NonEmptyVector[(String, SpriteType)],
+    returnType: SpriteType
+)
+
+object FlattenedFunctionType:
+  import SpriteType.FunctionType
+
+  def from(funType: FunctionType): FlattenedFunctionType =
+    ???
+
+  private def build(
+      funType: FunctionType,
+      params: NonEmptyVector[(String, SpriteType)]
+  ): FlattenedFunctionType = funType match
+    case FunctionType(param, paramType, returnType: FunctionType) =>
+      build(funType = returnType, params = params :+ (param -> paramType))
+
+    case FunctionType(param, paramType, returnType) =>
+      FlattenedFunctionType(
+        params = params :+ (param -> paramType),
+        returnType
+      )

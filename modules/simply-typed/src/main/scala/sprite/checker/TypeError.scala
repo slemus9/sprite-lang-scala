@@ -1,6 +1,7 @@
 package sprite.checker
 
 import sprite.language.{SpriteTerm, SpriteType}
+import sprite.printer.SpritePrinter
 
 import scala.util.control.NoStackTrace
 
@@ -19,3 +20,7 @@ final class NonInferable(term: SpriteTerm) extends TypeError:
 final class InvalidApply(`type`: SpriteType) extends TypeError:
   override val getMessage: String =
     s"Trying to apply a term that is not a function. Received a term of type: ${`type`}"
+
+final class InvalidSubtypingRelation(t1: SpriteType, t2: SpriteType) extends TypeError:
+  override def getMessage(): String =
+    s"Type ${SpritePrinter.printType(t1)} is not a subtype of ${SpritePrinter.printType(t2)}"

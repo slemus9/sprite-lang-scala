@@ -14,7 +14,7 @@ import sprite.transformations.SpriteTerminalTermQFLIATransformer
 trait TypeSynthetizer:
   checker: TypeChecker =>
 
-  def synth(context: Map[String, SpriteType], term: Inferable): TypeCheckResult[Synth] = term match
+  def synth(context: Map[String, SpriteType], term: SpriteTerm): TypeCheckResult[Synth] = term match
     case x: IntConst =>
       Synth(constraint = Constraint.alwaysHolds, inferred = SpriteType.primitive(x)).pure
 
@@ -28,7 +28,7 @@ trait TypeSynthetizer:
         Synth(constraint, inferred = t)
       }
 
-    case LambdaApply(fun: Inferable, arg) =>
+    case LambdaApply(fun: SpriteTerm, arg) =>
       synth(context, fun).flatMap {
         case Synth(funConstraint, funType: FunctionType) =>
           synthLambdaApply(context, funConstraint, funType, argument = arg)
@@ -37,8 +37,7 @@ trait TypeSynthetizer:
           InvalidApply(other.inferred).raiseError
       }
 
-    case LambdaApply(fun, _) =>
-      NonInferable(fun).raiseError
+    case term => NonInferable(term).raiseError
 
   private def synthLambdaApply(
       context: Map[String, SpriteType],
@@ -58,8 +57,6 @@ trait TypeSynthetizer:
 end TypeSynthetizer
 
 object TypeSynthetizer:
-
-  type Inferable = IntConst | Var | LambdaApply | Annotation
 
   final case class Synth(
       constraint: Constraint,
