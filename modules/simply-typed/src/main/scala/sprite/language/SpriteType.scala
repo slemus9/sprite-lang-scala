@@ -64,23 +64,28 @@ end SpriteType
 final case class FlattenedFunctionType(
     params: NonEmptyVector[(String, SpriteType)],
     returnType: SpriteType
-)
+):
+
+  def spitAt(n: Int): (Vector[(String, SpriteType)], Option[FlattenedFunctionType]) =
+    val (taken, remaining) = params.toVector.splitAt(n)
+    taken -> NonEmptyVector.fromVector(remaining).map { params =>
+      FlattenedFunctionType(params, returnType)
+    }
 
 object FlattenedFunctionType:
   import SpriteType.FunctionType
 
   def from(funType: FunctionType): FlattenedFunctionType =
-    ???
+    build(
+      returnType = funType.returnType,
+      params = NonEmptyVector.one(funType.param -> funType.paramType)
+    )
 
   private def build(
-      funType: FunctionType,
+      returnType: SpriteType,
       params: NonEmptyVector[(String, SpriteType)]
-  ): FlattenedFunctionType = funType match
-    case FunctionType(param, paramType, returnType: FunctionType) =>
-      build(funType = returnType, params = params :+ (param -> paramType))
-
+  ): FlattenedFunctionType = returnType match
     case FunctionType(param, paramType, returnType) =>
-      FlattenedFunctionType(
-        params = params :+ (param -> paramType),
-        returnType
-      )
+      build(returnType, params = params :+ (param -> paramType))
+
+    case returnType => FlattenedFunctionType(params, returnType)

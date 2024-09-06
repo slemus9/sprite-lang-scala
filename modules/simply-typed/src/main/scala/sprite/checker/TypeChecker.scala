@@ -19,17 +19,18 @@ trait TypeChecker:
       term: SpriteTerm,
       expectedType: SpriteType
   ): TypeCheckResult[Constraint] = (term, expectedType) match
-    case (Lambda(params, body), funType: FunctionType) =>
-      val assumptions = FlattenedFunctionType.from(funType).params.toVector.take(params.size)
-      check(
-        context = context ++ assumptions,
-        term = body,
-        expectedType = funType.returnType
-      ).map { constraint =>
-        assumptions.foldRight(constraint) { case ((param, paramType), constraint) =>
-          implicationConstraint(param, paramType, constraint)
-        }
-      }
+    case (Lambda(params, body), funType: FunctionType) => ???
+    // TODO: Fix
+    // val assumptions = FlattenedFunctionType.from(funType).params.toVector.take(params.size)
+    // check(
+    //   context = context ++ assumptions,
+    //   term = body,
+    //   expectedType = funType.returnType
+    // ).map { constraint =>
+    //   assumptions.foldRight(constraint) { case ((param, paramType), constraint) =>
+    //     implicationConstraint(param, paramType, constraint)
+    //   }
+    // }
 
     case (Let(Bind(x, e1), e2), t2) =>
       for
